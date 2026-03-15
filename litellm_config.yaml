@@ -1,0 +1,32 @@
+# litellm proxy config - routes Claude model names to local vLLM
+# Start: litellm --config litellm_config.yaml --port 4000
+
+model_list:
+  - model_name: claude-opus-4-6
+    litellm_params:
+      model: openai/nvfp4
+      api_base: http://127.0.0.1:18002/v1
+      api_key: fake
+  - model_name: claude-sonnet-4-6
+    litellm_params:
+      model: openai/nvfp4
+      api_base: http://127.0.0.1:18002/v1
+      api_key: fake
+  - model_name: claude-opus-4.6
+    litellm_params:
+      model: openai/nvfp4
+      api_base: http://127.0.0.1:18002/v1
+      api_key: fake
+  - model_name: claude-sonnet-4.6
+    litellm_params:
+      model: openai/nvfp4
+      api_base: http://127.0.0.1:18002/v1
+      api_key: fake
+  - model_name: claude-haiku-4-5-20251001
+    litellm_params:
+      model: openai/nvfp4
+      api_base: http://127.0.0.1:18002/v1
+      api_key: fake
+
+litellm_settings:
+  drop_params: true
