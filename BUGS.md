@@ -128,3 +128,30 @@ pip install 'litellm[proxy]'
 ## Bug 10: litellm `ModuleNotFoundError: No module named 'pydantic_settings'`
 
 Same as above — resolved by `pip install 'litellm[proxy]'`.
+
+---
+
+## Bug 11: `ImportError: cannot import name 'is_offline_mode' from 'huggingface_hub'`
+
+**When**: vLLM startup, importing transformers.
+
+**Cause**: `pip install 'huggingface_hub[cli]'` (used to download the model) upgrades huggingface_hub to 1.x, which breaks transformers 4.57.x. The transformers `utils/hub.py` tries to import `is_offline_mode` which was removed from the public API.
+
+**Fix**: Pin compatible versions after model download:
+```bash
+pip install 'huggingface_hub<1.0' transformers==4.57.6
+```
+
+---
+
+## Bug 12: flashinfer JIT ignores PATH, uses `/usr/local/cuda` symlink
+
+**When**: flashinfer JIT compilation during vLLM startup (CUDA graph capture phase).
+
+**Cause**: Even with `/usr/local/cuda-12.9/bin` first in PATH, flashinfer's ninja build uses the `CUDA_HOME`-resolved nvcc at `/usr/local/cuda/bin/nvcc` (which symlinks to CUDA 12.4). Result: `nvcc fatal: Unsupported gpu architecture 'compute_120a'`.
+
+**Fix**: Set `CUDA_HOME` explicitly in `start-vllm.sh`:
+```bash
+export CUDA_HOME=/usr/local/cuda-12.9
+export PATH=/usr/local/cuda-12.9/bin:$PATH
+```

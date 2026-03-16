@@ -3,6 +3,7 @@
 # vLLM >= 0.17.1rc1.dev172 required for NVFP4 + CUDA graphs on Blackwell
 
 export CUDA_VISIBLE_DEVICES=0
+export CUDA_HOME=/usr/local/cuda-12.9  # flashinfer JIT ignores PATH, needs CUDA_HOME (Bug 12)
 export PATH=/usr/local/cuda-12.9/bin:/opt/conda/bin:/usr/local/bin:/usr/bin:/bin
 
 # 1GB workspace buffer for flashinfer JIT (default 394MB is too small)

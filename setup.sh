@@ -21,6 +21,10 @@ pip install 'vllm==0.17.1rc1.dev172+g697e4ff35' \
 echo "=== Installing litellm proxy ==="
 pip install 'litellm[proxy]' -q
 
+echo "=== Pinning huggingface_hub<1.0 to fix transformers import (Bug 11) ==="
+# huggingface_hub>=1.0 breaks transformers 4.57.x (removed 'is_offline_mode')
+pip install 'huggingface_hub<1.0' transformers==4.57.6 -q
+
 echo "=== Patching tokenizer config (TokenizersBackend -> PreTrainedTokenizerFast) ==="
 # The nvfp4 checkpoint uses a custom tokenizer class unknown to transformers
 TOKENIZER_CFG=/dev/shm/models/nvfp4/tokenizer_config.json
