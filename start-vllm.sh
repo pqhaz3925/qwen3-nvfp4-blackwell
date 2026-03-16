@@ -21,5 +21,5 @@ exec vllm serve /dev/shm/models/nvfp4 \
   --tool-call-parser qwen3_coder \
   --max-model-len 220000 \
   --max-num-seqs 128 \
-  --gpu-memory-utilization 0.92 \
+  --gpu-memory-utilization 0.87 \
   --trust-remote-code

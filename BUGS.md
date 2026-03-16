@@ -155,3 +155,18 @@ pip install 'huggingface_hub<1.0' transformers==4.57.6
 export CUDA_HOME=/usr/local/cuda-12.9
 export PATH=/usr/local/cuda-12.9/bin:$PATH
 ```
+
+---
+
+## Bug 13: `torch.OutOfMemoryError` in Triton autotuner on first request
+
+**When**: first inference request after startup.
+
+**Cause**: flashinfer's Triton autotuner runs benchmarks on first request, allocating 256 MiB for benchmark cache. With `--gpu-memory-utilization 0.92`, only ~137 MiB VRAM is free after model + KV cache. Autotuner OOMs → EngineCore crash → vLLM dead.
+
+**Fix**: lower `--gpu-memory-utilization` to leave headroom:
+```bash
+--gpu-memory-utilization 0.87
+```
+This trades ~1 GiB of KV cache (396k → 317k tokens, 6.84x → 5.45x concurrency) for stable first requests.
+
